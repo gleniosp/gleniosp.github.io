@@ -1,0 +1,28 @@
+---
+import Default from "@astrojs/starlight/components/Footer.astro";
+
+const isHomePage = Astro.locals.starlightRoute.id === "";
+
+const initialYear = "2025";
+const currentYear = new Date().getFullYear().toString();
+const licensePeriod =
+  currentYear === initialYear ? currentYear : `${initialYear} - ${currentYear}`;
+---
+
+{
+  !isHomePage && (
+    <>
+      <Default>
+        <slot />
+      </Default>
+      <p class="license">Copyright © {licensePeriod} gleniosp</p>
+    </>
+  )
+}
+
+<style>
+  .license {
+    font-size: smaller;
+    text-align: center;
+  }
+</style>

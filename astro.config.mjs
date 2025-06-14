@@ -1,25 +1,57 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightBlog from 'starlight-blog'
+
+import { BLOG_URL, GITHUB_URL, LOCAL_PORT } from './src/constants';
+
+const getSite = () => {
+	return import.meta.env.DEV ? `http://localhost:${LOCAL_PORT}/` : BLOG_URL
+}
 
 // https://astro.build/config
 export default defineConfig({
+	server: { port: LOCAL_PORT },
+	site: getSite(),
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
+			credits: true,
+			title: 'gleniosp',
+			locales: {
+				root: { label: 'English', lang: 'en' },
+				// temporarily disable extra languages as it'll require more work for the RSS part and the rest of theme
+				// 'pt-br': { label: 'Português do Brasil', lang: 'pt-BR' }, 
+			},
+			social: [
 				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
+					icon: 'github',
+					label: 'GitHub',
+					href: 'https://github.com/gleniosp'
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
+					icon: 'linkedin',
+					label: 'LinkedIn',
+					href: GITHUB_URL
+				}
+			],
+			sidebar: [],
+			components: {
+				Footer: './src/components/ConditionalFooter.astro',
+			},
+			plugins: [
+				starlightBlog({
+					authors: {
+						gleniosp: {
+							name: 'Glênio Silva Pimentel',
+							title: 'Software Engineer',
+							picture: `${GITHUB_URL}.png`,
+							url: getSite(),
+						},
+					},
+					metrics: {
+						readingTime: true,
+					},
+				})
 			],
 		}),
 	],
